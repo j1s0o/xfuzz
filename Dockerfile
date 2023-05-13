@@ -9,21 +9,23 @@ RUN apt-get update && \
     build-essential \
     gcc \
     make \
+    python3-pip \
     libleveldb-dev # dùng để chạy sfuzz
 
-RUN mkdir -p xfuzz/sfuzz
-COPY sfuzz /xfuzz/sfuzz
 
-#run script for setup sfuzz
-RUN cd /xfuzz/sfuzz/scripts \
-    && sh install_cmake.sh --prefix /usr/local \
-    && sh install_deps.sh \
-    && cd .. \
-    && mkdir build \
-    && cd build \
-    && git submodule update --init \
-    && cmake .. \
-    && cd fuzzer; make
+COPY sfuzz /usr/local/bin
+#setup solc==0.4.25
+RUN curl -LO https://github.com/ethereum/solidity/releases/download/v0.4.25/solc-static-linux \
+    && mv solc-static-linux solc \
+    && chmod +x solc \
+    && mv solc /usr/bin/
+
+#setup xfuzz base
+#solc --combined-json abi,bin,bin-runtime,srcmap,srcmap-runtime,srcmap,srcmap-runtime,ast ReentrancyAttacker.sol > ReentrancyAttacker.sol.json
+# install slither-analyzer 0.6.9
+RUN pip3 install slither-analyzer==0.6.9 mythril==0.23.5
+
+
 
 
 
