@@ -1,31 +1,3 @@
-FROM ubuntu:18.04
-
-# Cập nhật và cài đặt các gói cơ bản
-RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    wget \
-    git \
-    build-essential \
-    gcc \
-    make \
-    python3-pip \
-    libleveldb-dev # dùng để chạy sfuzz
-
-
-COPY sfuzz /usr/local/bin
-#setup solc==0.4.25
-RUN curl -LO https://github.com/ethereum/solidity/releases/download/v0.4.25/solc-static-linux \
-    && mv solc-static-linux solc \
-    && chmod +x solc \
-    && mv solc /usr/bin/
-
-#setup xfuzz base
-#solc --combined-json abi,bin,bin-runtime,srcmap,srcmap-runtime,srcmap,srcmap-runtime,ast ReentrancyAttacker.sol > ReentrancyAttacker.sol.json
-# install slither-analyzer 0.6.9
-RUN pip3 install slither-analyzer==0.6.9 mythril==0.23.5
-
-
-
-
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:8c2b7df1d05ad10f64ab6f0e104e53b098e19f4629caf71a869f0a31bb0a3274
+size 898
